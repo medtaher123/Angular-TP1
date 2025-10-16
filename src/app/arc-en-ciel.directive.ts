@@ -1,13 +1,13 @@
 import { Directive, HostListener, HostBinding } from '@angular/core';
 
 @Directive({
-  selector: '[appArcEnCiel]'
+  selector: 'input[appArcEnCiel]'
 })
 export class ArcEnCielDirective {
 
   static readonly COLORS: string[] = ['red', 'blue', 'green', 'yellow', 'purple'];
 
-  @HostBinding('style.border') borderColor: string = ArcEnCielDirective.COLORS[0]
+  @HostBinding('style.borderColor') borderColor: string = ArcEnCielDirective.COLORS[0]
   @HostBinding('style.color') colorColor: string = ArcEnCielDirective.COLORS[0];
 
   constructor() { }
