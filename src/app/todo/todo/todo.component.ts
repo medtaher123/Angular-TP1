@@ -3,6 +3,7 @@ import { Todo } from '../model/todo';
 import { TodoService } from '../service/todo.service';
 
 import { FormsModule } from '@angular/forms';
+import { ArcEnCielDirective } from 'src/app/arc-en-ciel.directive';
 
 @Component({
     selector: 'app-todo',
@@ -10,7 +11,7 @@ import { FormsModule } from '@angular/forms';
     styleUrls: ['./todo.component.css'],
     providers: [TodoService],
     standalone: true,
-    imports: [FormsModule],
+    imports: [FormsModule,ArcEnCielDirective],
 })
 export class TodoComponent {
   private todoService = inject(TodoService);
