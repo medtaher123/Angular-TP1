@@ -52,6 +52,7 @@ import { ServiceWorkerModule } from "@angular/service-worker";
 import { AutocompleteComponent } from "./cv/autocomplete/autocomplete.component";
 import { SliderComponent } from "./rxjs/slider/slider.component";
 import { ArcEnCielDirective } from "./arc-en-ciel.directive";
+import { TTCComponent } from "./ttc/ttc.component";
 
 @NgModule({
   declarations: [
@@ -91,7 +92,8 @@ import { ArcEnCielDirective } from "./arc-en-ciel.directive";
     RhComponent,
     UserListComponent,
     ProductsComponent,
-    ArcEnCielDirective
+    ArcEnCielDirective,
+    TTCComponent,
   ],
   bootstrap: [AppComponent],
   imports: [
