@@ -15,7 +15,7 @@ export class TTCComponent {
   tva: WritableSignal<number> = signal(18)
   prix_unitaire_ttc = computed(() => this.prix() * (1+this.tva()/100))
   prix_total_ttc = computed(() => this.quantite() * this.prix() * (1+this.tva()/100))
-  discount = computed(()=> 0)
+  discount = computed(()=> this.quantite() < 10 ? 0 : this.prix_total_ttc() * (this.quantite() <= 15 ? 0.2 : 0.3))
 
 
 }
