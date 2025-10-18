@@ -1,1 +1,22 @@
-<p>ttc works!</p>
+<h2>TTC Calculator</h2>
+
+<div class="d-flex gap-3">
+  <div class="flex-grow-1">
+    <input type="number" [value]="prix()" (input)="prix.set($any($event.target).value)" class="form-control" placeholder="Prix">
+    <label>Prix HT</label>
+  </div>
+  <div class="flex-grow-1">
+    <input type="number" [value]="quantite()" (input)="quantite.set($any($event.target).value)" class="form-control" placeholder="Quantité">
+    <label>Quantité</label>
+  </div>
+  <div class="flex-grow-1">
+    <input type="number" [value]="tva()" (input)="tva.set($any($event.target).value)" class="form-control" placeholder="TVA">
+    <label>TVA</label>
+  </div>
+</div>
+
+<div class="row g-0">
+  <div class="col"><div class="alert alert-primary">Prix unitaire TTC : {{ prix_unitaire_ttc() | currency }}</div></div>
+  <div class="col"><div class="alert alert-success">Prix total TTC : {{ prix_total_ttc() | currency }}</div></div>
+  <div class="col"><div class="alert alert-danger">Discount : {{ discount() | currency }}</div></div>
+</div>
