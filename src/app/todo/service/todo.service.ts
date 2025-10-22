@@ -1,5 +1,5 @@
-import { Injectable, inject } from '@angular/core';
-import { Todo } from '../model/todo';
+import { Injectable, computed, inject, signal } from '@angular/core';
+import { Todo, TodoStatus } from '../model/todo';
 import { LoggerService } from '../../services/logger.service';
 
 let n = 1;
@@ -10,7 +10,17 @@ let n = 1;
 export class TodoService {
   private loggerService = inject(LoggerService);
 
-  private todos: Todo[] = [];
+  private todos = signal<Todo[]>([]);
+
+  waitingTodos = computed(() =>
+    this.todos().filter((todo) => todo.status === 'waiting')
+  );
+  inProgressTodos = computed(() =>
+    this.todos().filter((todo) => todo.status === 'in progress')
+  );
+  doneTodos = computed(() =>
+    this.todos().filter((todo) => todo.status === 'done')
+  );
 
   /**
    * elle retourne la liste des todos
@@ -18,7 +28,7 @@ export class TodoService {
    * @returns Todo[]
    */
   getTodos(): Todo[] {
-    return this.todos;
+    return this.todos();
   }
 
   /**
@@ -28,7 +38,7 @@ export class TodoService {
    *
    */
   addTodo(todo: Todo): void {
-    this.todos.push(todo);
+    this.todos.update((todos) => [...todos, todo]);
   }
 
   /**
@@ -38,12 +48,24 @@ export class TodoService {
    * @returns boolean
    */
   deleteTodo(todo: Todo): boolean {
-    const index = this.todos.indexOf(todo);
+    const index = this.todos().indexOf(todo);
     if (index > -1) {
-      this.todos.splice(index, 1);
+      this.todos.update((todos) => todos.filter((_, i) => i !== index));
       return true;
     }
     return false;
+  }
+
+  /**
+   * Elle permet de mettre à jour le status d'un todo
+   *
+   * @param todoId : number
+   * @param status : TodoStatus
+   */
+  updateTodoStatus(todoId: number, status: TodoStatus): void {
+    this.todos.update((todos) =>
+      todos.map((todo) => (todo.id === todoId ? { ...todo, status } : todo))
+    );
   }
 
   /**

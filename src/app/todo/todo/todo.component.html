@@ -1,18 +1,106 @@
-<div class="row">
-  <div class="col">
-    <ol class="list-group">
-      @for (todo of todos; track todo) {
-        <li class="list-group-item">
-          {{todo.name}} : {{todo.content}}
-          <i (click)="deleteTodo(todo)" class="fa fa-trash" aria-hidden="true"></i>
-        </li>
-      }
-    </ol>
+<div class="container">
+  <div class="row mb-4">
+    <div class="col">
+      <h3>Add New Task</h3>
+      <div class="mb-2">
+        <label>Name:</label>
+        <input
+          appArcEnCiel
+          [(ngModel)]="todo.name"
+          type="text"
+          class="form-control"
+        />
+      </div>
+      <div class="mb-2">
+        <label>Content:</label>
+        <input
+          appArcEnCiel
+          [(ngModel)]="todo.content"
+          type="text"
+          class="form-control"
+        />
+      </div>
+      <button
+        (click)="addTodo()"
+        [disabled]="!todo.name.trim() || !todo.content.trim()"
+        class="btn btn-primary"
+      >
+        Add Task
+      </button>
+    </div>
   </div>
-  <div class="col">
-    name: <input appArcEnCiel [(ngModel)]="todo.name" type="text" class="form-control">
-    content: <input appArcEnCiel [(ngModel)]="todo.content" type="text" class="form-control">
-    <button (click)="addTodo()" [disabled]="!todo.name.trim() || !todo.content.trim()"
-    class="btn btn-primary m-2">add</button>
+
+  <div class="row">
+    <div class="col-4">
+      <h4 class="bg-warning text-white p-2">
+        Waiting ({{ todoService.waitingTodos().length }})
+      </h4>
+      @for (todo of todoService.waitingTodos(); track todo.id) {
+      <div class="mb-3 p-2 border bg-white">
+        <h5>{{ todo.name }}</h5>
+        <p>{{ todo.content }}</p>
+        <select
+          class="form-select form-select-sm mb-2"
+          [value]="todo.status"
+          (change)="updateStatus(todo.id, $event)"
+        >
+          <option value="waiting">Waiting</option>
+          <option value="in progress">In Progress</option>
+          <option value="done">Done</option>
+        </select>
+        <button (click)="deleteTodo(todo)" class="btn btn-sm btn-danger">
+          <i class="fa fa-trash"></i> Delete
+        </button>
+      </div>
+      }
+    </div>
+
+    <div class="col-4">
+      <h4 class="bg-primary text-white p-2">
+        In Progress ({{ todoService.inProgressTodos().length }})
+      </h4>
+      @for (todo of todoService.inProgressTodos(); track todo.id) {
+      <div class="mb-3 p-2 border bg-white">
+        <h5>{{ todo.name }}</h5>
+        <p>{{ todo.content }}</p>
+        <select
+          class="form-select form-select-sm mb-2"
+          [value]="todo.status"
+          (change)="updateStatus(todo.id, $event)"
+        >
+          <option value="waiting">Waiting</option>
+          <option value="in progress">In Progress</option>
+          <option value="done">Done</option>
+        </select>
+        <button (click)="deleteTodo(todo)" class="btn btn-sm btn-danger">
+          <i class="fa fa-trash"></i> Delete
+        </button>
+      </div>
+      }
+    </div>
+
+    <div class="col-4">
+      <h4 class="bg-success text-white p-2">
+        Done ({{ todoService.doneTodos().length }})
+      </h4>
+      @for (todo of todoService.doneTodos(); track todo.id) {
+      <div class="mb-3 p-2 border bg-white">
+        <h5>{{ todo.name }}</h5>
+        <p>{{ todo.content }}</p>
+        <select
+          class="form-select form-select-sm mb-2"
+          [value]="todo.status"
+          (change)="updateStatus(todo.id, $event)"
+        >
+          <option value="waiting">Waiting</option>
+          <option value="in progress">In Progress</option>
+          <option value="done">Done</option>
+        </select>
+        <button (click)="deleteTodo(todo)" class="btn btn-sm btn-danger">
+          <i class="fa fa-trash"></i> Delete
+        </button>
+      </div>
+      }
+    </div>
   </div>
 </div>
