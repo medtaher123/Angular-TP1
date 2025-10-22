@@ -9,11 +9,11 @@ import { AuthService } from '../../auth/services/auth.service';
 import { DefaultImagePipe } from '../pipes/default-image.pipe';
 
 @Component({
-    selector: 'app-details-cv',
-    templateUrl: './details-cv.component.html',
-    styleUrls: ['./details-cv.component.css'],
-    standalone: true,
-    imports: [DefaultImagePipe],
+  selector: 'app-details-cv',
+  templateUrl: './details-cv.component.html',
+  styleUrls: ['./details-cv.component.css'],
+  standalone: true,
+  imports: [DefaultImagePipe],
 })
 export class DetailsCvComponent implements OnInit {
   private cvService = inject(CvService);
@@ -24,16 +24,18 @@ export class DetailsCvComponent implements OnInit {
 
   cv: Cv | null = null;
 
+  isAuthenticated = this.authService.isAuthenticated;
+
   ngOnInit() {
     const id = this.activatedRoute.snapshot.params['id'];
     this.cvService.getCvById(+id).subscribe({
-        next: (cv) => {
-          this.cv = cv;
-        },
-        error: (e) => {
-          this.router.navigate([APP_ROUTES.cv]);
-        },
-      });
+      next: (cv) => {
+        this.cv = cv;
+      },
+      error: () => {
+        this.router.navigate([APP_ROUTES.cv]);
+      },
+    });
   }
   deleteCv(cv: Cv) {
     this.cvService.deleteCvById(cv.id).subscribe({

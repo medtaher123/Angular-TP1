@@ -8,7 +8,6 @@ import { HttpHeaders } from '@angular/common/http';
 export class AuthInterceptor implements HttpInterceptor {
   private authService = inject(AuthService);
 
-
   intercept(
     request: HttpRequest<unknown>,
     next: HttpHandler
