@@ -3,7 +3,7 @@ import { Todo, TodoStatus } from '../model/todo';
 import { TodoService } from '../service/todo.service';
 
 import { FormsModule } from '@angular/forms';
-import { ArcEnCielDirective } from 'src/app/arc-en-ciel.directive';
+import { ArcEnCielDirective } from 'src/app/directives/arc-en-ciel.directive';
 
 @Component({
   selector: 'app-todo',
