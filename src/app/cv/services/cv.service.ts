@@ -1,8 +1,9 @@
-import { Injectable, inject } from "@angular/core";
+import { Injectable, inject} from "@angular/core";
 import { Cv } from "../model/cv";
 import { Observable, Subject } from "rxjs";
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { API } from "../../../config/api.config";
+import {toSignal} from "@angular/core/rxjs-interop"
 
 @Injectable({
   providedIn: "root",
@@ -18,7 +19,7 @@ export class CvService {
   /**
    * Le flux des cvs sélectionnés
    */
-  selectCv$ = this.#selectCvSuject$.asObservable();
+  selectCv$ = toSignal<Cv | null>(this.#selectCvSuject$.asObservable());
   constructor() {
     this.cvs = [
       new Cv(1, "aymen", "sellaouti", "teacher", "as.jpg", "1234", 40),

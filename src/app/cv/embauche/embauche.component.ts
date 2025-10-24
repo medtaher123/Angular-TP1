@@ -16,8 +16,9 @@ import { ItemComponent } from '../item/item.component';
 export class EmbaucheComponent {
   private embaucheService = inject(EmbaucheService);
 
-  public embauchees: Cv[] = [];
-  constructor() {
-    this.embauchees = this.embaucheService.getEmbauchees();
+  public embauchees = this.embaucheService.embauchees;
+
+  trackById(_i: number, cv: Cv) {
+    return cv.id;
   }
 }

@@ -1,4 +1,4 @@
-import { Component, inject } from "@angular/core";
+import { Component, inject, effect, EffectRef } from "@angular/core";
 import { Cv } from "../model/cv";
 import { LoggerService } from "../../services/logger.service";
 import { ToastrService } from "ngx-toastr";
@@ -30,6 +30,9 @@ export class CvComponent {
   /*   selectedCv: Cv | null = null; */
   date = new Date();
 
+  private _stopSelectCvEffect?: EffectRef;
+
+
   constructor() {
     this.cvService.getCvs().subscribe({
       next: (cvs) => {
@@ -44,6 +47,8 @@ export class CvComponent {
     });
     this.logger.logger("je suis le cvComponent");
     this.toastr.info("Bienvenu dans notre CvTech");
-    this.cvService.selectCv$.subscribe((cv) => (this.selectedCv = cv));
+    this._stopSelectCvEffect = effect(() => {
+      this.selectedCv = this.cvService.selectCv$() ?? null; // read the Signal
+    });
   }
 }
