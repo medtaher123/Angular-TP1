@@ -5,7 +5,7 @@
         <h4 class="m-y-2">Cv {{ cv.firstname }} {{ cv.name }}</h4>
         <div class="d-flex justify-content-center">
           <img width="150px" height="150px" class="rounded-circle align-content-center"
-            src="assets/images/{{ cv.path | defaultImage }}" alt="{{ cv.name }}" />
+           [src]="cv.path.startsWith('https') ? cv.path : 'assets/images/' + (cv.path | defaultImage)">
         </div>
         <div class="row">
           <div class="col-md-12">

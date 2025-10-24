@@ -5,7 +5,9 @@
         <img src="assets/images/rotating_card_thumb2.png">
       </div>
       <div class="user">
-        <img class="img-circle" src="assets/images/{{cv.path | defaultImage}}">
+        <img class="img-circle" 
+          [src]="cv.path.startsWith('http') ? cv.path : 'assets/images/' + (cv.path | defaultImage)"
+        >
       </div>
       <div class="content">
         <div class="main">
