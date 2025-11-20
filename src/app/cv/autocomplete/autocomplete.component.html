@@ -1,3 +1,200 @@
-<form [formGroup]="form">
-  <input type="text" class="form-control" formControlName="search" />
-</form>
+<div class="autocomplete-container position-relative">
+  <form [formGroup]="form">
+    <div class="input-group">
+      <input 
+        type="text" 
+        class="form-control" 
+        formControlName="search"
+        placeholder="Tapez au moins 2 caractères pour rechercher un CV..."
+        (focus)="onInputFocus()"
+        (blur)="onInputBlur()"
+        autocomplete="off"
+        [class.is-invalid]="searchTerm() && searchTerm().length === 1"
+      />
+      <button 
+        type="button" 
+        class="btn btn-outline-secondary"
+        (click)="clearSelection()"
+        [disabled]="!selectedCv() && !searchTerm()"
+        title="Effacer la sélection"
+      >
+        <i class="fa fa-times"></i> Effacer
+      </button>
+    </div>
+    
+    <!-- Message d'aide pour l'utilisateur -->
+    @if (searchTerm() && searchTerm().length === 1) {
+      <div class="text-muted small mt-1">
+        <i class="fa fa-info-circle"></i> Tapez au moins un caractère de plus pour commencer la recherche
+      </div>
+    }
+  </form>
+  
+  <!-- Indicateur de chargement optimisé -->
+  @if (isLoading()) {
+    <div class="position-absolute w-100 bg-white border border-top-0 p-2 loading-indicator">
+      <div class="d-flex align-items-center">
+        <div class="spinner-border spinner-border-sm me-2" role="status">
+          <span class="visually-hidden">Recherche en cours...</span>
+        </div>
+        <span class="text-primary">Recherche de "{{searchTerm()}}"...</span>
+      </div>
+    </div>
+  }
+  
+  <!-- Résultats du dropdown avec performance améliorée -->
+  @if (showDropdown() && !isLoading()) {
+    <div class="dropdown-menu show position-absolute w-100 border border-top-0 max-height-200 overflow-auto">
+      @if (filteredCvs().length > 0) {
+        <div class="dropdown-header small">
+          {{filteredCvs().length}} résultat(s) trouvé(s) pour "{{searchTerm()}}"
+        </div>
+        @for (cv of filteredCvs(); track cv.id) {
+          <div class="dropdown-item-container p-2 border-bottom">
+            <div class="d-flex align-items-center">
+              <div class="me-3">
+                @if (cv.path && cv.path.trim()) {
+                  <img 
+                    [src]="'assets/images/' + cv.path" 
+                    [alt]="cv.firstname + ' ' + cv.name"
+                    class="rounded-circle"
+                    width="40"
+                    height="40"
+                    style="object-fit: cover;"
+                    loading="lazy"
+                  >
+                } @else {
+                  <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                    <i class="fa fa-user text-white"></i>
+                  </div>
+                }
+              </div>
+              <div class="grow">
+                <h6 class="mb-1">
+                  <span [innerHTML]="highlightSearchTerm(cv.firstname + ' ' + cv.name, searchTerm())"></span>
+                </h6>
+                <small class="text-muted">{{cv.job}} - {{cv.age}} ans</small>
+              </div>
+              <div class="d-flex gap-2">
+                <button 
+                  class="btn btn-sm btn-outline-primary"
+                  (click)="selectCv(cv)"
+                  title="Sélectionner ce CV"
+                >
+                  <i class="fa fa-check"></i> Sélectionner
+                </button>
+                <button 
+                  class="btn btn-sm btn-primary"
+                  (click)="viewCvDetails(cv)"
+                  title="Voir les détails"
+                >
+                  <i class="fa fa-eye"></i> Détails
+                </button>
+              </div>
+            </div>
+          </div>
+        }
+      } @else {
+        <div class="dropdown-item-text text-muted p-3">
+          <i class="fa fa-search"></i> Aucun CV trouvé pour "{{searchTerm()}}"
+        </div>
+      }
+    </div>
+  }
+  
+  <!-- CV sélectionné avec informations améliorées -->
+  @if (selectedCv() && !detailedCv()) {
+    <div class="card mt-3 border-success">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-start mb-3">
+          <h5 class="card-title mb-0 text-success">
+            <i class="fa fa-check-circle"></i> CV Sélectionné
+          </h5>
+          <div class="btn-group">
+            <button 
+              class="btn btn-primary btn-sm"
+              (click)="viewSelectedCvDetails()"
+              title="Voir tous les détails"
+            >
+              <i class="fa fa-eye me-1"></i> Voir les détails
+            </button>
+            <button 
+              class="btn btn-outline-secondary btn-sm"
+              (click)="clearSelection()"
+              title="Désélectionner"
+            >
+              <i class="fa fa-times"></i>
+            </button>
+          </div>
+        </div>
+        <div class="d-flex align-items-center">
+          <div class="me-3">
+            @if (selectedCv()!.path && selectedCv()!.path.trim()) {
+              <img 
+                [src]="'assets/images/' + selectedCv()!.path" 
+                [alt]="selectedCv()!.firstname + ' ' + selectedCv()!.name"
+                class="rounded-circle border border-success"
+                width="60"
+                height="60"
+                style="object-fit: cover;"
+              >
+            } @else {
+              <div class="rounded-circle bg-success d-flex align-items-center justify-content-center border border-success" style="width: 60px; height: 60px;">
+                <i class="fa fa-user text-white fa-lg"></i>
+              </div>
+            }
+          </div>
+          <div class="grow">
+            <h6 class="mb-1 fw-bold">{{selectedCv()!.firstname}} {{selectedCv()!.name}}</h6>
+            <p class="mb-1"><strong>Poste :</strong> {{selectedCv()!.job}}</p>
+            <p class="mb-1"><strong>Âge :</strong> {{selectedCv()!.age}} ans</p>
+            <p class="mb-0"><strong>CIN :</strong> {{selectedCv()!.cin}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+  
+  <!-- Affichage des détails avec CV Card -->
+  @if (detailedCv()) {
+    <div class="mt-4">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4 class="mb-0 text-primary">
+          <i class="fa fa-id-card-o"></i> Détails de {{detailedCv()!.firstname}} {{detailedCv()!.name}}
+        </h4>
+        <button 
+          class="btn btn-outline-secondary"
+          (click)="closeDetails()"
+          title="Fermer les détails"
+        >
+          <i class="fa fa-times me-1"></i> Fermer
+        </button>
+      </div>
+      <div class="cv-card-wrapper d-flex justify-content-center">
+        <div class="col-md-6 col-lg-4">
+          <app-cv-card [cv]="detailedCv()"></app-cv-card>
+        </div>
+      </div>
+    </div>
+  }
+  
+  <!-- Section de debug (optionnelle, peut être commentée en production) -->
+  <!--
+  <div class="mt-4 p-3 bg-light rounded" style="font-size: 0.8em;">
+    <h6>Informations de Debug :</h6>
+    <div class="row">
+      <div class="col-md-6">
+        <strong>Cache :</strong> {{getCacheStats().size}} entrée(s)<br>
+        <strong>Terme recherché :</strong> "{{searchTerm()}}"<br>
+        <strong>Résultats :</strong> {{filteredCvs().length}} CV(s)
+      </div>
+      <div class="col-md-6">
+        <strong>États :</strong><br>
+        - Chargement : {{isLoading()}}<br>
+        - Dropdown visible : {{showDropdown()}}<br>
+        - CV sélectionné : {{selectedCv()?.firstname || 'Aucun'}}
+      </div>
+    </div>
+  </div>
+  -->
+</div>

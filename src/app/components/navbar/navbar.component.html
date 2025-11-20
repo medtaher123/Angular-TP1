@@ -35,6 +35,12 @@
               routerLinkActive="active text-primary"
               >Cv</a
               >
+              <a
+                class="nav-link"
+                [routerLink]="['cv-search']"
+                routerLinkActive="active text-primary"
+                >CV Search</a
+                >
               @if (authService.isAuthenticated()) {
                 <a
                   class="nav-link"

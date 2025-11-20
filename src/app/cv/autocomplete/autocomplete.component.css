@@ -1,0 +1,192 @@
+.autocomplete-container {
+  position: relative;
+  z-index: 1000;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #dee2e6;
+  border-radius: 0.375rem;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+  z-index: 1001;
+}
+
+.dropdown-item-container {
+  transition: background-color 0.15s ease-in-out;
+}
+
+.dropdown-item-container:hover {
+  background-color: #f8f9fa;
+}
+
+.dropdown-item-container:last-child {
+  border-bottom: none !important;
+}
+
+.max-height-200 {
+  max-height: 250px;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.dropdown-item:hover {
+  background-color: #f8f9fa;
+}
+
+.dropdown-item:focus {
+  background-color: #e9ecef;
+  outline: none;
+}
+
+/* Button styling for dropdown items */
+.dropdown-item-container .btn {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  white-space: nowrap;
+  transition: all 0.15s ease-in-out;
+}
+
+.dropdown-item-container .btn:hover {
+  transform: scale(1.05);
+}
+
+.dropdown-item-container .btn i {
+  font-size: 0.7rem;
+}
+
+/* Styles pour la mise en surbrillance */
+mark.bg-warning {
+  background-color: #fff3cd !important;
+  padding: 1px 3px;
+  border-radius: 2px;
+  font-weight: 600;
+}
+
+/* Amélioration du dropdown */
+.dropdown-header {
+  background-color: #e9ecef;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid #dee2e6;
+  font-size: 0.8rem;
+}
+
+.loading-indicator {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Amélioration du CV sélectionné */
+.card.border-success {
+  border-color: #28a745 !important;
+  box-shadow: 0 0 0 0.125rem rgba(40, 167, 69, 0.25);
+}
+
+/* Amélioration des transitions */
+.dropdown-item-container {
+  transition: all 0.2s ease-in-out;
+}
+
+.dropdown-item-container:hover {
+  background-color: #f8f9fa;
+  transform: translateX(2px);
+}
+
+.rounded-circle {
+  transition: all 0.2s ease-in-out;
+}
+
+.rounded-circle:hover {
+  transform: scale(1.05);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+/* Loading animation */
+.spinner-border-sm {
+  width: 1rem;
+  height: 1rem;
+}
+
+/* Custom scrollbar for dropdown */
+.dropdown-menu::-webkit-scrollbar {
+  width: 6px;
+}
+
+.dropdown-menu::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.dropdown-menu::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 3px;
+}
+
+.dropdown-menu::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Utility classes */
+.grow {
+  flex-grow: 1;
+}
+
+/* CV Card wrapper styling */
+.cv-card-wrapper {
+  min-height: 450px;
+  padding: 20px 0;
+}
+
+.cv-card-wrapper .col-md-6 {
+  max-width: 400px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .autocomplete-container {
+    font-size: 0.9rem;
+  }
+  
+  .dropdown-item-container {
+    padding: 0.5rem;
+  }
+  
+  .dropdown-item-container .d-flex {
+    flex-direction: column;
+    align-items: flex-start !important;
+  }
+  
+  .dropdown-item-container .d-flex .d-flex.gap-2 {
+    flex-direction: row;
+    align-items: center;
+    margin-top: 0.5rem;
+    width: 100%;
+    justify-content: flex-end;
+  }
+  
+  .card-body {
+    padding: 1rem;
+  }
+  
+  .dropdown-item-container .btn {
+    font-size: 0.7rem;
+    padding: 0.2rem 0.4rem;
+  }
+  
+  .cv-card-wrapper {
+    min-height: 350px;
+  }
+  
+  .cv-card-wrapper app-cv-card {
+    transform: scale(0.8);
+  }
+}
