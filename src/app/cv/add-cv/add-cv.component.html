@@ -1,30 +1,96 @@
-<p>add-cv works!</p>
-<form [formGroup]="form">
-  Name:
-  <input type="text" class="form-control" formControlName="name" />
-  <div
-    *ngIf="form.get('name')?.errors && form.get('name')?.touched"
-    class="alert alert-danger"
-  >
-    Ce champ est obligatoire
-  </div>
-  Firstname:
-  <input type="text" class="form-control" formControlName="firstname" /> Age:
-  <input type="text" class="form-control" formControlName="age" /> Cin:
-  <input type="text" class="form-control" formControlName="cin" />
-  <div
-    *ngIf="
-      form.errors && form.errors['cinFirstCars'] && cin?.touched && age?.touched
-    "
-    class="alert alert-danger"
-  >
-    Cette Cin est invalide
-  </div>
-  Job: <input type="text" class="form-control" formControlName="job" /> Path:
-  <input type="text" class="form-control" formControlName="path" />
+<div class="container mt-5">
 
-  <button [disabled]="form.invalid" class="btn btn-primary" (click)="addCv()">
-    add cv
-  </button>
-</form>
-{{ form.errors | json }}
+  <h2 class="mb-4">Ajouter un CV</h2>
+
+  <form [formGroup]="form" (ngSubmit)="addCv()" class="needs-validation" novalidate>
+
+    <!-- Nom -->
+    <div class="mb-3">
+      <label class="form-label">Nom <span class="text-danger">*</span></label>
+      <input type="text" class="form-control" formControlName="name" />
+      @if (form.get('name')?.touched && form.get('name')?.errors?.['required']) {
+        <small class="text-danger">Le nom est obligatoire</small>
+      }
+    </div>
+
+    <!-- Prénom -->
+    <div class="mb-3">
+      <label class="form-label">Prénom <span class="text-danger">*</span></label>
+      <input type="text" class="form-control" formControlName="firstname" />
+      @if (form.get('firstname')?.touched && form.get('firstname')?.errors?.['required']) {
+        <small class="text-danger">Le prénom est obligatoire</small>
+      }
+    </div>
+
+    <!-- Âge -->
+    <div class="mb-3">
+      <label class="form-label">Âge <span class="text-danger">*</span></label>
+      <input type="number" class="form-control" formControlName="age" min="1" />
+      @if (form.get('age')?.touched && form.get('age')?.errors?.['required']) {
+        <small class="text-danger">L'âge est obligatoire</small>
+      }
+    </div>
+
+    <!-- CIN -->
+    <div class="mb-3">
+      <label class="form-label">CIN <span class="text-danger">*</span></label>
+      <input type="text" class="form-control" formControlName="cin" maxlength="8" />
+      @if (cin.touched && cin.errors?.['required']) {
+        <small class="text-danger">La CIN est obligatoire</small>
+      }
+      @if (cin.touched && cin.errors?.['pattern']) {
+        <small class="text-danger">La CIN doit contenir exactement 8 chiffres</small>
+      }
+      <!-- Erreur personnalisée si tu as un validateur global -->
+      @if (form.errors?.['cinFirstCars'] && cin.touched && age.touched) {
+        <small class="text-danger">Cette CIN est invalide (règles spécifiques)</small>
+      }
+    </div>
+
+    <!-- Métier -->
+    <div class="mb-3">
+      <label class="form-label">Métier <span class="text-danger">*</span></label>
+      <input type="text" class="form-control" formControlName="job" />
+      @if (form.get('job')?.touched && form.get('job')?.errors?.['required']) {
+        <small class="text-danger">Le métier est obligatoire</small>
+      }
+    </div>
+
+    <!-- Photo (Path) - Protégé pour les mineurs -->
+    <div class="mb-3">
+      <label class="form-label">Photo (URL)</label>
+      <input
+        type="url"
+        class="form-control"
+        formControlName="path"
+        [placeholder]="age.value < 18 ? 'Non autorisé pour les mineurs' : 'https://example.com/photo.jpg'"
+        [disabled]="age.value < 18"
+      />
+
+      @if (age.value < 18 || age.value == null) {
+        <div class="alert alert-warning mt-2 p-2">
+          <strong>Protection des mineurs (RGPD)</strong> :  
+          Les personnes de moins de 18 ans ne peuvent pas ajouter de photo.
+        </div>
+      } @else {
+        <small class="text-muted">Optionnel - Lien vers une photo professionnelle</small>
+      }
+    </div>
+
+    <!-- Bouton Soumission -->
+    <div class="mt-4">
+      <button
+        type="submit"
+        class="btn btn-success btn-lg"
+        [disabled]="form.invalid"
+      >
+        Ajouter le CV
+      </button>
+    </div>
+
+    <!-- Debug (à supprimer en prod) -->
+    <!-- <pre>{{ form.value | json }}</pre>
+    <pre>{{ form.errors | json }}</pre> -->
+
+  </form>
+</div>
