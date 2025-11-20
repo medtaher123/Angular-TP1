@@ -12,8 +12,10 @@ import { ToastrService } from "ngx-toastr";
 import { APP_ROUTES } from "src/config/routes.config";
 import { Cv } from "../model/cv";
 import { JsonPipe } from "@angular/common";
-import {startWith, tap} from "rxjs";
+import {startWith, tap, Subject, takeUntil, filter, takeLast} from "rxjs";
 
+
+const DRAFT_KEY = 'cv_add_draft'
 @Component({
   selector: "app-add-cv",
   templateUrl: "./add-cv.component.html",
@@ -24,6 +26,8 @@ export class AddCvComponent {
   private router = inject(Router);
   private toastr = inject(ToastrService);
   private formBuilder = inject(FormBuilder);
+
+  private destroy$ = new Subject<void>();
 
   form = this.formBuilder.group(
     {
@@ -47,6 +51,31 @@ export class AddCvComponent {
   );
 
   ngOnInit(): void {
+    this.restoreDraft();
+    this.setupMinorProtection();
+    this.setupAutoSave();
+
+  }
+  
+  ngOnDestroy() : void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  private restoreDraft(): void{
+    const draft = localStorage.getItem(DRAFT_KEY);
+    if(draft){
+      try{
+        const data = JSON.parse(draft);
+        this.form.patchValue(data);
+        this.toastr.info("Brouillon restauré !","",{timeOut: 3000});
+      }catch(e){
+        console.error("Erreur de restauration de brouillon", e);
+        localStorage.removeItem(DRAFT_KEY);
+      }
+    }
+  }
+  private setupMinorProtection(): void{
     this.form.get('age')!.valueChanges.pipe(
       startWith(this.form.get('age')!.value),
       tap((age:number | null) =>{
@@ -58,9 +87,22 @@ export class AddCvComponent {
         } else{
           pathControl.enable({emitEvent: false});
         }
-      })
+      }),
+      takeUntil(this.destroy$)
     ).subscribe();
   }
+
+  private setupAutoSave(): void {
+    this.form.valueChanges.pipe(
+      startWith(this.form.value),
+      filter(()=> this.form.valid),
+      tap((value)=>{
+        localStorage.setItem(DRAFT_KEY, JSON.stringify(value));
+      }),
+      takeUntil(this.destroy$)
+    ).subscribe();
+  }
+
 
   addCv() {
     this.cvService.addCv(this.form.getRawValue() as Cv).subscribe({
