@@ -1,17 +1,39 @@
-@if ((products$ | async); as productsList,) {
-  <button class="btn btn-primary"> More Products</button>
-  <div class="alert alert-warning">
-    Product Number: {{productsList?.length}}
-  </div>
-  <div class="row">
-    @for (product of productsList; track product) {
-      <div class="col-4">
-        <img class="rounded-circle" src="{{product.thumbnail}}" width="150px" height="150px">
-        {{product.title}}
-      </div>
-    }
-  </div>
-} @else {
-  Loading...
+@if (isLoading(); as loading) {
+  <div class="alert alert-info">Loading...</div>
 }
 
+<button 
+  class="btn btn-primary mb-3" 
+  (click)="loadMore()" 
+  [disabled]="isLoading() || products().length >= totalProducts"
+>
+  More Products
+</button>
+
+<div class="alert alert-warning">
+  Product Number: {{products().length}}
+</div>
+
+@if (products().length >= totalProducts && totalProducts > 0) {
+  <p class="alert alert-success">No more products available.</p>
+}
+
+<div class="row">
+  @for (product of products(); track product.id) {
+    <div class="col-4 mb-3">
+      <div class="card">
+        <img 
+          class="card-img-top" 
+          [src]="product.thumbnail" 
+          [alt]="product.title"
+          style="height: 200px; object-fit: cover;"
+        >
+        <div class="card-body">
+          <h5 class="card-title">{{product.title}}</h5>
+          <p class="card-text">
+            <strong>Price: ${{product.price}}</strong>
+          </p>
+        </div>
+      </div>
+    </div>
+  }

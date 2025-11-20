@@ -67,6 +67,12 @@
                         routerLinkActive="active text-primary"
                         >Rh</a
                         >
+                        <a
+                          class="nav-link"
+                          [routerLink]="['products']"
+                          routerLinkActive="active text-primary"
+                          >Products</a
+                        >
                         @if (!authService.isAuthenticated()) {
                           <a
                             class="nav-link"

@@ -10,8 +10,8 @@ import { ProductApiResponse } from "../dto/product-api-response.dto";
 export class ProductService {
   private http = inject(HttpClient);
 
-  getProducts(setting: Settings) {
-    const { limit, skip } = setting;
+  getProducts(settings: Settings) {
+    const { limit, skip } = settings;
     return this.http.get<ProductApiResponse>(
       `${API.products}?limit=${limit}&skip=${skip}`
     );
