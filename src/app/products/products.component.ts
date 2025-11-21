@@ -6,10 +6,19 @@ import {
   map,
   takeWhile,
   scan,
+  startWith,
 } from "rxjs";
 import { Product } from "./dto/product.dto";
 import { ProductService } from "./services/product.service";
 import { Settings } from "./dto/product-settings.dto";
+
+interface PageInfo{
+  products: Product[],
+  total: number,
+  skip: number,
+  hasMore: boolean,
+
+}
 
 @Component({
   selector: "app-products",
@@ -17,61 +26,44 @@ import { Settings } from "./dto/product-settings.dto";
   styleUrls: ["./products.component.css"],
 })
 export class ProductsComponent {
-  private readonly PRODUCTS_PER_PAGE = 12;
-  
-  // BehaviorSubject to trigger API calls
-  private loadMoreSubject = new BehaviorSubject<void>(undefined);
-  
-  // Observable stream for products with pagination
-  products$: Observable<Product[]> = this.loadMoreSubject.pipe(
-    // Transform each trigger into settings for the next API call
-    scan((acc, _) => ({
-      limit: this.PRODUCTS_PER_PAGE,
-      skip: acc ? acc.skip + this.PRODUCTS_PER_PAGE : 0
-    }), { limit: this.PRODUCTS_PER_PAGE, skip: 0 } as Settings),
-    
-    // Fetch products from API using the settings
-    concatMap(settings => this.productService.getProducts(settings)),
-    
-    // Stop calling API when no more products are available
-    takeWhile(response => response.products.length > 0, true),
-    
-    // Extract and accumulate products
-    scan((allProducts: Product[], response) => [
-      ...allProducts, 
-      ...response.products
-    ], [])
-  );
+  /* Todo : Faire le nécessaire pour créer le flux des produits à afficher */
+  /* Tips : vous pouvez voir les différents imports non utilisés et vous en inspirer */
+  private loadMore$ = new BehaviorSubject<void>(undefined);
 
-  // Observable to track if all products have been loaded
-  allProductsLoaded$: Observable<boolean> = this.loadMoreSubject.pipe(
-    scan((acc, _) => ({
-      limit: this.PRODUCTS_PER_PAGE,
-      skip: acc ? acc.skip + this.PRODUCTS_PER_PAGE : 0
-    }), { limit: this.PRODUCTS_PER_PAGE, skip: 0 } as Settings),
-    concatMap(settings => this.productService.getProducts(settings)),
-    map(response => response.products.length === 0),
-    scan((wasCompleted, isCompleted) => wasCompleted || isCompleted, false)
-  );
 
-  // Observable to track loading state
-  isLoading$: Observable<boolean> = this.loadMoreSubject.pipe(
-    map(() => true),
-    scan((acc, _) => ({
-      limit: this.PRODUCTS_PER_PAGE,
-      skip: acc ? acc.skip + this.PRODUCTS_PER_PAGE : 0
-    }), { limit: this.PRODUCTS_PER_PAGE, skip: 0 } as Settings),
-    concatMap(settings => 
-      this.productService.getProducts(settings).pipe(
-        map(() => false)
-      )
-    )
-  );
+  products$!: Observable<PageInfo>;
+
 
   constructor(private productService: ProductService) {}
 
-  // Method to load more products
-  loadMore(): void {
-    this.loadMoreSubject.next();
+  ngOnInit(): void {
+    this.products$ = this.loadMore$.pipe(
+
+      concatMap((_,index)=>{
+        const skip = index *12;
+        const limit = 12;
+        return this.productService.getProducts({limit,skip}).pipe(
+          map((response) =>({
+            products: response.products,
+            total: response.total,
+            skip: response.skip + response.products.length,
+            hasMore: response.skip +response.products.length < response.total,
+          }))
+        );
+      }),
+      takeWhile((page) => page.hasMore ||page.products.length ===0, true),
+
+
+      scan((acc: PageInfo, current: PageInfo)=> ({
+        products: [...acc.products, ...current.products],
+        total: current.total,
+        skip: current.skip,
+        hasMore: current.hasMore,
+      }), {products: [], total: 0, skip: 0, hasMore: true} as PageInfo),
+    );
+
+  }
+  onLoadMore() : void {
+    this.loadMore$.next();
   }
 }

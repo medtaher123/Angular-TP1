@@ -14,7 +14,6 @@ export class AutocompleteComponent {
   cvService = inject(CvService);
   form = this.formBuilder.group({ search: [""] });
 
-  // Observable for filtered CVs
   filteredCvs$: Observable<Cv[]> = (this.form.get("search")!.valueChanges as Observable<string>).pipe(
     startWith<string>(""),
     debounceTime(300),

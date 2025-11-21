@@ -19,6 +19,9 @@ const routes: Route[] = [
   { path: "login", component: LoginComponent },
   { path: "rh", component: RhComponent },
   {
+    path: "products", component: ProductsComponent
+  },
+  {
     path: "cv",
     component: CvComponent,
   },
