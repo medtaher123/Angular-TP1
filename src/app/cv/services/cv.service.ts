@@ -1,8 +1,9 @@
 import { Injectable } from "@angular/core";
 import { Cv } from "../model/cv";
-import { Observable, Subject } from "rxjs";
+import { Observable, Subject,map, of, catchError } from "rxjs";
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { API } from "../../../config/api.config";
+
 
 @Injectable({
   providedIn: "root",
@@ -131,4 +132,26 @@ export class CvService {
   selectCv(cv: Cv) {
     this.#selectCvSuject$.next(cv);
   }
+
+  // cv.service.ts
+
+checkCinExists(cin: string): Observable<boolean> {
+  const trimmed = cin?.trim();
+
+  if (!trimmed || trimmed.length !== 8 || !/^\d{8}$/.test(trimmed)) {
+    return of(false);
+  }
+
+  const filter = encodeURIComponent(JSON.stringify({
+    where: { cin: trimmed }
+  }));
+
+  return this.http.get<Cv[]>(`${API.cv}?filter=${filter}`).pipe(
+    map((results: Cv[]) => results.length > 0),
+    catchError((err) => {
+      console.warn('Erreur vérification CIN (serveur):', err);
+      return of(false); 
+    })
+  );
+}
 }
