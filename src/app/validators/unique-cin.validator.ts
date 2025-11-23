@@ -1,21 +1,18 @@
-import { inject, Injectable } from "@angular/core";
+import { inject, Injectable } from '@angular/core';
 import {
   AbstractControl,
   AsyncValidator,
   ValidationErrors,
-} from "@angular/forms";
-import { Observable, of, timer } from "rxjs";
-import { catchError, map, switchMap } from "rxjs/operators";
-import { CvService } from "../cv/services/cv.service";
+} from '@angular/forms';
+import { Observable, of, timer, catchError, map, switchMap } from 'rxjs';
+import { CvService } from '../cv/services/cv.service';
 
-@Injectable({ providedIn: "root" })
+@Injectable({ providedIn: 'root' })
 export class UniqueCinValidator implements AsyncValidator {
   private cvService = inject(CvService);
 
-  validate(
-    control: AbstractControl<string | null>
-  ): Observable<ValidationErrors | null> {
-    const cin = control.value?.trim();
+  validate(control: AbstractControl): Observable<ValidationErrors | null> {
+    const cin = (control.value || '').trim();
 
     if (!cin || cin.length !== 8 || !/^\d{8}$/.test(cin)) {
       return of(null);
