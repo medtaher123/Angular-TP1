@@ -53,6 +53,7 @@ import { AutocompleteComponent } from "./cv/autocomplete/autocomplete.component"
 import { SliderComponent } from "./rxjs/slider/slider.component";
 import { ArcEnCielDirective } from "./directives/arc-en-ciel.directive";
 import { TTCComponent } from "./ttc/component/ttc.component";
+import { MasterDetailsCvComponent } from "./cv/master-details-cv/master-details-cv.component";
 
 @NgModule({
   declarations: [
@@ -94,6 +95,7 @@ import { TTCComponent } from "./ttc/component/ttc.component";
     ProductsComponent,
     ArcEnCielDirective,
     TTCComponent,
+    MasterDetailsCvComponent
   ],
   bootstrap: [AppComponent],
   imports: [

@@ -1,0 +1,47 @@
+<div class="row">
+  <div class="col-md-4 col-sm-12">
+    <h4 class="text-primary mb-3">Master Detail Cv works</h4>
+    
+    @defer (on viewport) {
+      <div class="list-group">
+        @for (cv of cvs$ | async; track cv.id; let isOdd = $odd) {
+          
+          <a 
+            [routerLink]="[cv.id]" 
+            routerLinkActive="selected-border" 
+            class="list-group-item list-group-item-action"
+            [ngClass]="{
+              'list-group-item-primary': isOdd,
+              'list-group-item-secondary': !isOdd
+            }"
+            style="cursor: pointer;">
+            
+            <app-item [cv]="cv"></app-item>
+            
+          </a>
+
+        } @empty {
+          <div class="alert alert-warning">Aucun CV trouvé</div>
+        }
+      </div>
+    } @placeholder {
+      <p>Chargement...</p>
+    }
+  </div>
+
+  <div class="col-md-8 col-sm-12">
+      <router-outlet #outlet="outlet"></router-outlet> 
+      
+      @if (!outlet.isActivated) {
+        <div class="card p-5 text-center shadow-sm">
+          <div class="card-body">
+            <i class="fa fa-address-card fa-5x text-primary mb-3"></i>
+            <h4 class="card-title">Détails du candidat</h4>
+            <p class="card-text text-muted">
+              Sélectionnez un CV dans la liste pour afficher les détails.
+            </p>
+          </div>
+        </div>
+      }
+  </div>
+</div>
