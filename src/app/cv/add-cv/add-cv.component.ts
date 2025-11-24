@@ -82,7 +82,7 @@ export class AddCvComponent implements OnInit, OnDestroy {
         startWith(this.form.get('age')!.value as number),
         tap((age) => {
           const pathCtrl = this.form.get('path')!;
-          if (age === null || (age < 18 && age > 0)) {
+          if (age === null || (age < 18 && age >= 0)) {
             pathCtrl.setValue('');
             pathCtrl.disable({ emitEvent: false });
           } else if (age >= 18) {
