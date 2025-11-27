@@ -42,8 +42,4 @@ export class UserListComponent {
     this.add.emit(this.userFullName);
     this.userFullName = '';
   }
-
-  trackByUser(index: number, user: User): string {
-    return user.name;
-  }
 }

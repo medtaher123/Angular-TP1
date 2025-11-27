@@ -15,7 +15,7 @@ export class RhComponent implements OnInit {
 
   constructor(
     private userService: UsersService,
-    private ngZone: NgZone 
+    private ngZone: NgZone
   ) {
     this.oddUsers = this.userService.getOddOrEven(true);
     this.evenUsers = this.userService.getOddOrEven();
@@ -32,7 +32,7 @@ export class RhComponent implements OnInit {
 
   addEvenUser(newUser: string) {
     const user = this.userService.createUser(newUser);
-    this.evenUsers = [user, ...this.evenUsers]; 
+    this.evenUsers = [user, ...this.evenUsers];
   }
 
   createChart() {

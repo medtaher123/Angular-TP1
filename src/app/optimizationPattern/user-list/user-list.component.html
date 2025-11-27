@@ -8,9 +8,10 @@
   </div>
 </div>
 <ol class="list-group">
+    @for (user of users; track user) {
   <li
-    *ngFor="let user of users; trackBy: trackByUser"
     class="list-group-item">
     {{user.name}} : {{user.age}} [{{user.age | fibonacci}}]
   </li>
+}
 </ol>
