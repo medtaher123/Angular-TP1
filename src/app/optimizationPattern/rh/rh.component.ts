@@ -1,43 +1,58 @@
-import {Component, OnInit} from '@angular/core';
-import {User, UsersService} from "../users.service";
+import { Component, OnInit, ChangeDetectionStrategy, NgZone } from '@angular/core';
+import { User, UsersService } from "../users.service";
 import * as ChartJs from 'chart.js/auto';
+
 @Component({
   selector: 'app-rh',
   templateUrl: './rh.component.html',
-  styleUrls: ['./rh.component.css']
+  styleUrls: ['./rh.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RhComponent implements OnInit {
   oddUsers: User[];
   evenUsers: User[];
   chart: any;
-  constructor(private userService: UsersService) {
+
+  constructor(
+    private userService: UsersService,
+    private ngZone: NgZone 
+  ) {
     this.oddUsers = this.userService.getOddOrEven(true);
     this.evenUsers = this.userService.getOddOrEven();
   }
 
   ngOnInit(): void {
-        this.createChart();
-    }
-  addUser(list: User[], newUser: string) {
-    this.userService.addUser(list, newUser);
+    this.createChart();
   }
-  createChart(){
-    const data = [
-      { users: 'Workers', count: this.oddUsers.length },
-      { users: 'Boss', count: this.evenUsers.length },
-    ];
-    this.chart = new ChartJs.Chart("MyChart",
-    {
-      type: 'bar',
+
+  addOddUser(newUser: string) {
+    const user = this.userService.createUser(newUser);
+    this.oddUsers = [user, ...this.oddUsers]; 
+  }
+
+  addEvenUser(newUser: string) {
+    const user = this.userService.createUser(newUser);
+    this.evenUsers = [user, ...this.evenUsers]; 
+  }
+
+  createChart() {
+    this.ngZone.runOutsideAngular(() => {
+      const data = [
+        { users: 'Workers', count: this.oddUsers.length },
+        { users: 'Boss', count: this.evenUsers.length },
+      ];
+      this.chart = new ChartJs.Chart("MyChart", {
+        type: 'bar',
         data: {
           labels: data.map(row => row.users),
-        datasets: [
-        {
-          label: 'Entreprise stats',
-          data: data.map(row => row.count)
+          datasets: [
+            {
+              label: 'Entreprise stats',
+              data: data.map(row => row.count)
+            }
+          ]
         }
-      ]
-    }
+      });
     });
   }
 }

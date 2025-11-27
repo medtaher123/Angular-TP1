@@ -46,7 +46,7 @@ import { DefaultImagePipe } from "./cv/pipes/default-image.pipe";
 import { EmbaucheComponent } from "./cv/embauche/embauche.component";
 import { CvCardComponent } from "./cv/cv-card/cv-card.component";
 import { RhComponent } from "./optimizationPattern/rh/rh.component";
-import { UserListComponent } from "./optimizationPattern/user-list/user-list.component";
+import { UserListComponent, FibonacciPipe } from "./optimizationPattern/user-list/user-list.component";
 import { ProductsComponent } from "./products/products.component";
 import { ServiceWorkerModule } from "@angular/service-worker";
 import { AutocompleteComponent } from "./cv/autocomplete/autocomplete.component";
@@ -92,6 +92,7 @@ import { MasterDetailsCvComponent } from "./cv/master-details-cv/master-details-
     TestHttpComponent,
     RhComponent,
     UserListComponent,
+    FibonacciPipe,
     ProductsComponent,
     ArcEnCielDirective,
     TTCComponent,
