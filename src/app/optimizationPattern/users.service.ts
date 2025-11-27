@@ -25,10 +25,6 @@ export class UsersService {
     return this.users.filter((user) => !!(user.age % 2) === isOdd);
   }
 
-  /**
-   * ✅ Nouvelle méthode: Crée un utilisateur sans muter de liste
-   * Retourne un nouvel objet User pour permettre l'immutabilité
-   */
   createUser(name: string): User {
     return {
       name,
@@ -36,9 +32,7 @@ export class UsersService {
     };
   }
 
-  /**
-   * @deprecated Utiliser createUser() avec immutabilité pour OnPush
-   */
+
   addUser(list: User[], name: string) {
     list.unshift({
       name,
