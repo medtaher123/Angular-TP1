@@ -4,6 +4,7 @@ import { LoggerService } from "../../services/logger.service";
 import { ToastrService } from "ngx-toastr";
 import { CvService } from "../services/cv.service";
 import { Observable, catchError, of } from "rxjs";
+import { EmbaucheService } from "../services/embauche.service";
 @Component({
   selector: "app-cv",
   templateUrl: "./cv.component.html",
@@ -11,14 +12,17 @@ import { Observable, catchError, of } from "rxjs";
 })
 export class CvComponent {
   cvs$: Observable<Cv[]>;
+  embauchees: Cv[] = [];
   selectedCv$: Observable<Cv | null>;
   date = new Date();
 
   constructor(
     private logger: LoggerService,
     private toastr: ToastrService,
-    private cvService: CvService
+    private cvService: CvService,
+    private embaucheService: EmbaucheService
   ) {
+    this.embauchees = this.embaucheService.getEmbauchees();
     this.cvs$ = this.cvService.getCvs().pipe(
       catchError((error) => {
         this.logger.error('Erreur lors du chargement des CVs:', error);

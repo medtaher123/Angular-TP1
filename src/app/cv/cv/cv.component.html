@@ -10,4 +10,14 @@
     <app-cv-card [cv]="selectedCv$ | async"></app-cv-card>
   </div>
 </div>
+
+@defer (on viewport; prefetch when embauchees.length) {
 <app-embauche></app-embauche>
+} @placeholder {
+<div class="row">
+  <div class="col">
+    <div class="alert alert-info">Chargement des embauchées...</div>
+  </div>
+  <div class="col"></div>
+</div>
+}
