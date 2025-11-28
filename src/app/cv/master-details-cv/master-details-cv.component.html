@@ -1,0 +1,27 @@
+<div class="container mt-4">
+  <h2>Master-Detail CV</h2>
+  <div class="row">
+    <div class="col-md-4">
+      <h4>Liste des CVs</h4>
+      <ol class="list-group">
+        @for (cv of cvs; track cv.id; let isOdd = $odd) {
+        <li
+          [ngClass]="{
+            'list-group-item-primary': isOdd,
+            'list-group-item-secondary': !isOdd
+          }"
+          class="list-group-item"
+          [routerLink]="[cv.id]"
+          style="cursor: pointer"
+        >
+          <app-item [cv]="cv"></app-item>
+        </li>
+        }
+      </ol>
+    </div>
+
+    <div class="col-md-8">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>
